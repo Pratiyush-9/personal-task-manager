@@ -1,3 +1,4 @@
+import Swal from "sweetalert2";
 import {
   DragDropContext,
   Droppable,
@@ -185,7 +186,18 @@ if (draggedTask?.important) {
 };
 
   const handleDelete = async (id) => {
-  if (!window.confirm("Delete this task?")) return;
+  const result = await Swal.fire({
+    title: "Delete Task?",
+    text: "This action cannot be undone.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#dc2626",
+    cancelButtonColor: "#6b7280",
+    confirmButtonText: "Delete",
+    cancelButtonText: "Keep Task",
+  });
+
+  if (!result.isConfirmed) return;
 
   await deleteTask(id);
 
