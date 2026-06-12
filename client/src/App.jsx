@@ -1,3 +1,5 @@
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from "react";
 import {
   getTasks,
@@ -33,25 +35,29 @@ function App() {
     e.preventDefault();
 
     if (!title.trim()) {
-      alert("Title is required");
+      toast.error("Title is required");
       return;
     }
 
     if (editingId) {
-      await updateTask(editingId, {
-        title,
-        description,
-        dueDate,
-      });
+  await updateTask(editingId, {
+    title,
+    description,
+    dueDate,
+  });
 
-      setEditingId(null);
-    } else {
-      await createTask({
-        title,
-        description,
-        dueDate,
-      });
-    }
+  toast.info("Task Updated Successfully");
+
+  setEditingId(null);
+} else {
+  await createTask({
+    title,
+    description,
+    dueDate,
+  });
+
+  toast.success("Task Added Successfully");
+}
 
     setTitle("");
     setDescription("");
@@ -61,16 +67,22 @@ function App() {
   };
 
   const handleToggle = async (id) => {
-    await toggleTask(id);
-    loadTasks();
-  };
+  await toggleTask(id);
+
+  toast.success("Task Status Updated");
+
+  loadTasks();
+};
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Delete this task?")) return;
+  if (!window.confirm("Delete this task?")) return;
 
-    await deleteTask(id);
-    loadTasks();
-  };
+  await deleteTask(id);
+
+  toast.success("Task Deleted");
+
+  loadTasks();
+};
 
   const handleEdit = (task) => {
     setEditingId(task.id);
@@ -90,8 +102,26 @@ function App() {
     });
 
   return (
+  <>
     <div className="container">
-      <h1>Personal Task Manager</h1>
+  <div className="hero">
+  <h2>TaskFlow</h2>
+
+  <h1>
+    Organize your work.
+    <br />
+    Stay focused.
+  </h1>
+
+  <p>
+    A simple and modern task manager to track work,
+    manage priorities and stay productive every day.
+  </p>
+</div>
+
+<h3 className="form-heading">
+  Create New Task
+</h3>
 
       <form onSubmit={handleSubmit}>
         <input
@@ -139,66 +169,73 @@ function App() {
         </div>
       </div>
 
-      <div className="search-filter">
-        <input
-          type="text"
-          placeholder="Search tasks..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+<div className="search-filter">
+  <input
+    type="text"
+    placeholder="Search tasks..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+  />
 
-        <div className="filters">
-          <button
-            type="button"
-            onClick={() => setFilter("all")}
-          >
-            All
-          </button>
+<div className="filters">
+  <button
+    type="button"
+    onClick={() => setFilter("all")}
+  >
+    All
+  </button>
 
-          <button
-            type="button"
-            onClick={() => setFilter("active")}
-          >
-            Active
-          </button>
+  <button
+    type="button"
+    onClick={() => setFilter("active")}
+  >
+    Active
+  </button>
 
-          <button
-            type="button"
-            onClick={() => setFilter("completed")}
-          >
-            Completed
-          </button>
-        </div>
-      </div>
+  <button
+    type="button"
+    onClick={() => setFilter("completed")}
+  >
+    Completed
+  </button>
+</div>
+</div>
 
-      <h2>Tasks</h2>
+      <h2 className="tasks-heading">Tasks</h2>
 
       {filteredTasks.length === 0 ? (
-        <p>No tasks found</p>
+        <div className="empty-state">
+  No tasks found 🚀
+</div>
       ) : (
         filteredTasks.map((task) => (
-          <div className="task-card" key={task.id}>
-            <h3>{task.title}</h3>
+ <div className="task-card" key={task.id}>
+  <h3>{task.title}</h3>
 
-            <p>{task.description}</p>
+  <p>{task.description}</p>
 
-            <p>
-              <strong>Due:</strong> {task.dueDate}
-            </p>
+  <p>
+  <strong>Due:</strong>{" "}
+  {task.dueDate
+    ? new Date(task.dueDate).toLocaleDateString("en-GB")
+    : "No Date"}
+</p>
 
-            <span
-              className={
-                task.completed
-                  ? "status completed"
-                  : "status active"
-              }
-            >
-              {task.completed
-                ? "Completed"
-                : "Active"}
-            </span>
+  <div>
+    <span
+      className={
+        task.completed
+          ? "status completed"
+          : "status active"
+      }
+    >
+      {task.completed
+        ? "Completed"
+        : "Active"}
+    </span>
+  </div>
 
-            <div className="task-actions">
+  <div className="task-actions">
               <button
                 className="complete-btn"
                 onClick={() =>
@@ -230,9 +267,15 @@ function App() {
             </div>
           </div>
         ))
-      )}
+            )}
     </div>
-  );
+
+    <ToastContainer
+      position="top-right"
+      autoClose={2000}
+    />
+  </>
+);
 }
 
 export default App;
