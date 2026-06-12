@@ -43,7 +43,8 @@ app.post("/tasks", (req, res) => {
     description: req.body.description || "",
     dueDate: req.body.dueDate || "",
     completed: false,
-    createdAt: new Date().toISOString(),
+important: req.body.important || false,
+createdAt: new Date().toISOString(),
   };
 
   tasks.unshift(newTask);
@@ -100,6 +101,27 @@ app.patch("/tasks/:id/toggle", (req, res) => {
   res.json(task);
 });
 
+// Toggle important
+app.patch("/tasks/:id/important", (req, res) => {
+  const tasks = getTasks();
+
+  const task = tasks.find(
+    (t) => t.id === req.params.id
+  );
+
+  if (!task) {
+    return res.status(404).json({
+      message: "Task not found",
+    });
+  }
+
+  task.important = !task.important;
+
+  saveTasks(tasks);
+
+  res.json(task);
+}); 
+
 // Delete task
 app.delete("/tasks/:id", (req, res) => {
   const tasks = getTasks();
@@ -112,6 +134,16 @@ app.delete("/tasks/:id", (req, res) => {
 
   res.json({
     message: "Task deleted successfully",
+  });
+});
+
+app.patch("/tasks/reorder", (req, res) => {
+  const reorderedTasks = req.body;
+
+  saveTasks(reorderedTasks);
+
+  res.json({
+    message: "Tasks reordered successfully",
   });
 });
 

@@ -126,24 +126,6 @@ form button:hover {
   transform: translateY(-4px);
 }
 
-.stats .stat-card:nth-child(1) h3 {
-  font-size: 42px;
-  margin: 0;
-  color: #2563eb;
-}
-
-.stats .stat-card:nth-child(2) h3 {
-  font-size: 42px;
-  margin: 0;
-  color: #b45309;
-}
-
-.stats .stat-card:nth-child(3) h3 {
-  font-size: 42px;
-  margin: 0;
-  color: #166534;
-}
-
 .stat-card p {
   margin-top: 12px;
   color: #6b7280;
@@ -293,12 +275,12 @@ h2 {
   background: #b91c1c;
 }
 
-.task-actions button:not(.complete-btn):not(.delete-btn) {
+.task-actions button:not(.complete-btn):not(.delete-btn):not(.important-btn) {
   background: #2563eb;
   color: white;
 }
 
-.task-actions button:not(.complete-btn):not(.delete-btn):hover {
+.task-actions button:not(.complete-btn):not(.delete-btn):not(.important-btn):hover {
   background: #1d4ed8;
 }
 
@@ -381,4 +363,54 @@ h2 {
 
 .cancel-btn:hover {
   background: #4b5563;
+}
+
+.important-btn {
+  background: #f59e0b;
+  color: white;
+}
+
+.important-btn:hover {
+  background: #d97706;
+}
+.stats .stat-card:nth-child(1) h3 {
+  font-size: 42px;
+  margin: 0;
+  color: #2563eb;
+}
+
+.stats .stat-card:nth-child(2) h3 {
+  font-size: 42px;
+  margin: 0;
+  color: #f59e0b;
+}
+
+.stats .stat-card:nth-child(3) h3 {
+  font-size: 42px;
+  margin: 0;
+  color: #b45309;
+}
+
+.stats .stat-card:nth-child(4) h3 {
+  font-size: 42px;
+  margin: 0;
+  color: #166534;
+}
+
+.task-card {
+  cursor: grab;
+}
+
+.task-card:active {
+  cursor: grabbing;
+}
+
+.overdue {
+  background: #fee2e2;
+  color: #b91c1c;
+  margin-left: 10px;
+}
+
+.overdue-card {
+  border-left: 5px solid #dc2626;
 }

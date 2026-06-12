@@ -47,3 +47,29 @@ export const deleteTask = async (id) => {
 
   return response.json();
 };
+
+export const toggleImportant = async (id) => {
+  const response = await fetch(
+    `${API_URL}/${id}/important`,
+    {
+      method: "PATCH",
+    }
+  );
+
+  return response.json();
+};
+
+export const reorderTasks = async (tasks) => {
+  const response = await fetch(
+    `${API_URL}/reorder`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(tasks),
+    }
+  );
+
+  return response.json();
+};

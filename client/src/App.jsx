@@ -1,3 +1,8 @@
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+} from "@hello-pangea/dnd";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from "react";
@@ -7,8 +12,11 @@ import {
   updateTask,
   toggleTask,
   deleteTask,
+  toggleImportant,
+  reorderTasks,
 } from "./api/taskApi";
 import "./App.css";
+
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -51,10 +59,11 @@ function App() {
   setEditingId(null);
 } else {
   await createTask({
-    title,
-    description,
-    dueDate,
-  });
+  title,
+  description,
+  dueDate,
+  important: false,
+});
 
   toast.success("Task Added Successfully");
 }
@@ -74,6 +83,107 @@ function App() {
   loadTasks();
 };
 
+const handleImportant = async (task) => {
+  await toggleImportant(task.id);
+
+  const updatedTasks = tasks.map((t) =>
+    t.id === task.id
+      ? { ...t, important: !t.important }
+      : t
+  );
+
+  const importantTasks = updatedTasks
+    .filter((t) => t.important)
+    .sort(
+      (a, b) =>
+        new Date(a.dueDate || "9999-12-31") -
+        new Date(b.dueDate || "9999-12-31")
+    );
+
+  const normalTasks = updatedTasks.filter(
+    (t) => !t.important
+  );
+
+  const finalTasks = [
+    ...importantTasks,
+    ...normalTasks,
+  ];
+
+  setTasks(finalTasks);
+
+  await reorderTasks(finalTasks);
+
+  if (task.important) {
+    toast.info("Task removed from important");
+  } else {
+    toast.success("Task marked as important");
+  }
+
+  loadTasks();
+};
+
+const isOverdue = (dueDate, completed) => {
+  if (!dueDate || completed) return false;
+
+  const today = new Date();
+  const due = new Date(dueDate);
+
+  today.setHours(0, 0, 0, 0);
+  due.setHours(0, 0, 0, 0);
+
+  return due < today;
+};
+
+const handleDragEnd = async (result) => {
+  if (!result.destination) return;
+
+  const draggedTask =
+filteredTasks[result.source.index];
+
+if (draggedTask?.important) {
+  toast.error(
+    "Important tasks cannot be moved"
+  );
+  return;
+}
+
+if (
+  result.destination.index <
+  tasks.filter(task => task.important).length
+) {
+  toast.error(
+    "Tasks cannot be moved above important tasks"
+  );
+  return;
+}
+
+if (draggedTask?.important) {
+  toast.error(
+    "Important tasks cannot be moved"
+  );
+  return;
+}
+
+  const items = Array.from(tasks);
+
+  const [reorderedItem] = items.splice(
+    result.source.index,
+    1
+  );
+
+  items.splice(
+    result.destination.index,
+    0,
+    reorderedItem
+  );
+
+  setTasks(items);
+
+  await reorderTasks(items);
+
+  // toast.success("Task reordered");
+};
+
   const handleDelete = async (id) => {
   if (!window.confirm("Delete this task?")) return;
 
@@ -91,15 +201,15 @@ function App() {
     setDueDate(task.dueDate);
   };
 
-  const filteredTasks = tasks
-    .filter((task) =>
-      task.title.toLowerCase().includes(search.toLowerCase())
-    )
-    .filter((task) => {
-      if (filter === "active") return !task.completed;
-      if (filter === "completed") return task.completed;
-      return true;
-    });
+ const filteredTasks = tasks
+  .filter((task) =>
+    task.title.toLowerCase().includes(search.toLowerCase())
+  )
+  .filter((task) => {
+    if (filter === "active") return !task.completed;
+    if (filter === "completed") return task.completed;
+    return true;
+  })
 
   return (
   <>
@@ -166,25 +276,34 @@ function App() {
       </form>
 
       <div className="stats">
-        <div className="stat-card">
-          <h3>{tasks.length}</h3>
-          <p>Total Tasks</p>
-        </div>
 
-        <div className="stat-card">
-          <h3>
-            {tasks.filter((task) => !task.completed).length}
-          </h3>
-          <p>Active Tasks</p>
-        </div>
+  <div className="stat-card">
+    <h3>{tasks.length}</h3>
+    <p>Total Tasks</p>
+  </div>
 
-        <div className="stat-card">
-          <h3>
-            {tasks.filter((task) => task.completed).length}
-          </h3>
-          <p>Completed Tasks</p>
-        </div>
-      </div>
+  <div className="stat-card">
+    <h3>
+      {tasks.filter(task => task.important).length}
+    </h3>
+    <p>Important Tasks</p>
+  </div>
+
+  <div className="stat-card">
+    <h3>
+      {tasks.filter(task => !task.completed).length}
+    </h3>
+    <p>Active Tasks</p>
+  </div>
+
+  <div className="stat-card">
+    <h3>
+      {tasks.filter(task => task.completed).length}
+    </h3>
+    <p>Completed Tasks</p>
+  </div>
+
+</div>
 
 <div className="search-filter">
   <input
@@ -225,9 +344,34 @@ function App() {
   No tasks found 🚀
 </div>
       ) : (
-        filteredTasks.map((task) => (
- <div className="task-card" key={task.id}>
-  <h3>{task.title}</h3>
+        <DragDropContext onDragEnd={handleDragEnd}>
+  <Droppable droppableId="tasks">
+    {(provided) => (
+      <div
+        ref={provided.innerRef}
+        {...provided.droppableProps}
+      >
+        {filteredTasks.map((task, index) => (
+          <Draggable
+            key={task.id}
+            draggableId={task.id}
+            index={index}
+          >
+            {(provided) => (
+              <div
+  className={`task-card ${
+    isOverdue(task.dueDate, task.completed)
+      ? "overdue-card"
+      : ""
+  }`}
+  ref={provided.innerRef}
+  {...provided.draggableProps}
+  {...provided.dragHandleProps}
+>
+  <h3>
+  {task.important && "⭐ "}
+  {task.title}
+</h3>
 
   <p>{task.description}</p>
 
@@ -238,27 +382,45 @@ function App() {
     : "No Date"}
 </p>
 
-  <div>
-    <span
-      className={
-        task.completed
-          ? "status completed"
-          : "status active"
-      }
-    >
-      {task.completed
-        ? "Completed"
-        : "Active"}
-    </span>
-  </div>
+<div>
+  <span
+    className={
+      task.completed
+        ? "status completed"
+        : "status active"
+    }
+  >
+    {task.completed
+      ? "Completed"
+      : "Active"}
+  </span>
 
-  <div className="task-actions">
-              <button
-                className="complete-btn"
-                onClick={() =>
-                  handleToggle(task.id)
-                }
-              >
+  {isOverdue(task.dueDate, task.completed) && (
+    <span className="status overdue">
+      Overdue
+    </span>
+  )}
+</div>
+
+ <div className="task-actions">
+
+  <button
+  className="important-btn"
+  onClick={() =>
+  handleImportant(task)
+}
+>
+  {task.important
+    ? "⭐ Important"
+    : "☆ Important"}
+</button>
+
+  <button
+    className="complete-btn"
+    onClick={() =>
+      handleToggle(task.id)
+    }
+  >
                 {task.completed
                   ? "Mark Active"
                   : "Mark Complete"}
@@ -282,9 +444,17 @@ function App() {
                 Delete
               </button>
             </div>
-          </div>
-        ))
+                       </div>
             )}
+          </Draggable>
+        ))}
+
+        {provided.placeholder}
+      </div>
+    )}
+  </Droppable>
+</DragDropContext>
+)}
     </div>
 
     <ToastContainer
