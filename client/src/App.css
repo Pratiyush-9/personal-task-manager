@@ -367,3 +367,18 @@ h2 {
     width: 100%;
   }
 }
+
+.form-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.cancel-btn {
+  background: #6b7280;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background: #4b5563;
+}

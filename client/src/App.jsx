@@ -143,9 +143,26 @@ function App() {
           onChange={(e) => setDueDate(e.target.value)}
         />
 
-        <button type="submit">
-          {editingId ? "Update Task" : "Add Task"}
-        </button>
+        <div className="form-buttons">
+  <button type="submit">
+    {editingId ? "Update Task" : "Add Task"}
+  </button>
+
+  {editingId && (
+    <button
+      type="button"
+      className="cancel-btn"
+      onClick={() => {
+        setEditingId(null);
+        setTitle("");
+        setDescription("");
+        setDueDate("");
+      }}
+    >
+      Cancel
+    </button>
+  )}
+</div>
       </form>
 
       <div className="stats">
