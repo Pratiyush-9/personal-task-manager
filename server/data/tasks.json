@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "id": "1781113754334",
+    "title": "abcd",
+    "description": "efgh",
+    "dueDate": "1110-02-02",
+    "completed": true,
+    "createdAt": "2026-06-10T17:49:14.334Z"
+  },
+  {
+    "id": "1781104619112",
+    "title": "Complete Studio Graphene Assignment",
+    "description": "Build Personal Task Manager",
+    "dueDate": "2026-06-12",
+    "completed": false,
+    "createdAt": "2026-06-10T15:16:59.112Z"
+  }
+]
