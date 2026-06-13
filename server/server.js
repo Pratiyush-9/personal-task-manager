@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 const tasksFile = path.join(__dirname, "data", "tasks.json");
 
 // Read tasks
