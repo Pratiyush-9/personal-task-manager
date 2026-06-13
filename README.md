@@ -250,15 +250,15 @@ JSON File Storage
 
 ### Dashboard
 
-![alt text](image-2.png)
+![Dashboard](dashboard.png)
 
 ### Task Creation Form
 
-![alt text](image-1.png)
+![Task Creation Form](task-creation.png)
 
 ### Task Management
 
-![alt text](image-3.png)
+![Task Management](task-management.png)
 
 ---
 
