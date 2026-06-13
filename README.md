@@ -2,14 +2,15 @@
 
 ### Modern Full-Stack Task Management Application
 
-TaskFlow is a modern productivity-focused task management application built using React, Node.js, Express.js, and JSON File Storage. It helps users organize tasks, manage priorities, track deadlines, and stay productive through a clean, responsive, and intuitive user experience.
+TaskFlow is a modern productivity-focused task management application built using React, Node.js, Express.js, and Local JSON-based Data Storage. It helps users organize tasks, manage priorities, track deadlines, and stay productive through a clean, responsive, and intuitive user experience.
 
 ---
 
 ## 🔗 Quick Links
 
-* 🌐 **Live Demo:** (Add after deployment)
-* 📂 **GitHub Repository:** (Add your GitHub repository link)
+* 🌐 **Live Demo:** https://personal-task-manager-blue.vercel.app
+* 📂 **GitHub Repository:** https://github.com/Pratiyush-9/personal-task-manager
+* ⚡ **Backend API:** https://personal-task-manager-7fbg.onrender.com/tasks
 
 ---
 
@@ -125,7 +126,7 @@ TaskFlow
 ### Clone Repository
 
 ```bash
-git clone YOUR_REPOSITORY_URL
+git clone https://github.com/Pratiyush-9/personal-task-manager.git
 cd personal-task-manager
 ```
 
@@ -172,6 +173,17 @@ http://localhost:5173
 | DELETE | /tasks/:id           | Delete task             |
 
 ---
+
+## 🌍 Live Deployment
+
+### Frontend
+https://personal-task-manager-blue.vercel.app
+
+### Backend API
+https://personal-task-manager-7fbg.onrender.com
+
+### Example API Endpoint
+https://personal-task-manager-7fbg.onrender.com/tasks
 
 ## 🚀 Deployment Architecture
 
@@ -238,15 +250,26 @@ JSON File Storage
 
 ### Dashboard
 
-(Add Screenshot)
+![alt text](image-2.png)
 
 ### Task Creation Form
 
-(Add Screenshot)
+![alt text](image-1.png)
 
 ### Task Management
 
-(Add Screenshot)
+![alt text](image-3.png)
+
+---
+
+## 🏆 Key Achievements
+
+- Developed and deployed a full-stack task management application.
+- Implemented CRUD operations using React and Express.js.
+- Integrated drag-and-drop task reordering with persistent storage.
+- Added task prioritization and overdue task detection.
+- Deployed frontend on Vercel and backend on Render.
+- Designed a responsive and user-friendly interface.
 
 ---
 
