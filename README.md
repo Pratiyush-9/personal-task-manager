@@ -174,17 +174,6 @@ http://localhost:5173
 
 ---
 
-## 🌍 Live Deployment
-
-### Frontend
-https://personal-task-manager-blue.vercel.app
-
-### Backend API
-https://personal-task-manager-7fbg.onrender.com
-
-### Example API Endpoint
-https://personal-task-manager-7fbg.onrender.com/tasks
-
 ## 🚀 Deployment Architecture
 
 ```text
@@ -276,4 +265,6 @@ JSON File Storage
 ## 👨‍💻 Author
 
 ### Pratiyush Kumar
+
+🔗 LinkedIn: https://www.linkedin.com/in/pratiyush-kumar-318435284/
 
